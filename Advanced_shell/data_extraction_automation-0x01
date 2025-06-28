@@ -1,21 +1,11 @@
 #!/bin/bash
 
-# Fichier JSON extrait précédemment
-DATA_FILE="data.json"
+name=$(jq -r '.name' data.json | sed 's/.*/\u&/')
+type=$(jq -r '.types[0].type.name' data.json | sed 's/.*/\u&/')
+weight=$(jq -r '.weight' data.json)
+height=$(jq -r '.height' data.json)
 
-# Extraction du nom
-name=$(jq -r '.forms[0].name' "$DATA_FILE")
+formatted_weight=$(awk "BEGIN {printf \"%.0f\", $weight/10}")
+formatted_height=$(awk "BEGIN {printf \"%.1f\", $height/10}")
 
-# Extraction de la hauteur (en décimètres) et conversion en mètres
-height_dm=$(jq -r '.height' "$DATA_FILE")
-height_m=$(echo "$height_dm / 10" | bc -l | sed 's/\.0*$//' )
-
-# Extraction du poids (en hectogrammes) et conversion en kilogrammes
-weight_hg=$(jq -r '.weight' "$DATA_FILE")
-weight_kg=$(echo "$weight_hg / 10" | bc -l | sed 's/\.0*$//' )
-
-# Extraction du type (il y a souvent plusieurs types, mais ici on prend le premier)
-type=$(jq -r '.types[0].type.name' "$DATA_FILE")
-
-# Format human-readable
-echo "$name is of type $type, weighs ${weight_kg}kg, and is ${height_m}m tall."
+echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Fichier JSON extrait précédemment
+DATA_FILE="data.json"
+
+# Extraction du nom
+name=$(jq -r '.forms[0].name' "$DATA_FILE")
+
+# Extraction de la hauteur (en décimètres) et conversion en mètres
+height_dm=$(jq -r '.height' "$DATA_FILE")
+height_m=$(echo "$height_dm / 10" | bc -l | sed 's/\.0*$//' )
+
+# Extraction du poids (en hectogrammes) et conversion en kilogrammes
+weight_hg=$(jq -r '.weight' "$DATA_FILE")
+weight_kg=$(echo "$weight_hg / 10" | bc -l | sed 's/\.0*$//' )
+
+# Extraction du type (il y a souvent plusieurs types, mais ici on prend le premier)
+type=$(jq -r '.types[0].type.name' "$DATA_FILE")
+
+# Format human-readable
+echo "$name is of type $type, weighs ${weight_kg}kg, and is ${height_m}m tall."

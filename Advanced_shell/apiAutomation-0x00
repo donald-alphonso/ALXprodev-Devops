@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# URL de l'API Pokémon pour Pikachu
+API_URL="https://pokeapi.co/api/v2/pokemon/pikachu"
+
+# Fichier de sortie pour les données
+DATA_FILE="data.json"
+
+# Fichier d'erreur
+ERROR_FILE="errors.txt"
+
+curl -s -f "$API_URL" -o "$DATA_FILE"
+
+# Vérifie si curl a réussi
+
+if [ $? -ne 0 ]; then
+    echo "Erreur lors de la requête API pour Pikachu à $(date)" >> "$ERROR_FILE"
+    # Supprimer le fichier data.json si erreur
+    rm -f "$DATA_FILE"
+fi
